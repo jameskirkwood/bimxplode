@@ -1,0 +1,8 @@
+__pycache__
+*.bimx
+*.d
+*.egg-info
+*.so
+/.vscode
+/build
+/dist

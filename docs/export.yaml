@@ -1,0 +1,73 @@
+AT OFFSET 850:
+    - "TEX"
+    - u32: 34
+
+AT OFFSET 12127929:
+    - "ELM"
+    - u32: unknown
+    - u32: unknown
+    - FOR EACH ELEMENT:
+        - u32: unknown
+        - u8[16]: 0
+        - float[15]: unknown
+        - u8[12]: 0
+        - char[128]: zero padded ascii "Element ID"
+        - char[36]: ascii element "guid"
+        - u8[12]: 0
+        - u16:
+            0x0fb: wall
+            0x0fc: column
+            0x0fe: window
+            0x0ff: door
+            0x100: object
+            0x102: slab
+            0x103: roof
+        - u8[82]: 0
+        - u32[12]:
+            1 0 0 0 0 0 0 0 0 0 0 0: wall
+            2 0 0 6 0 0 0 0 0 0 0 0: column
+            4 0 0 0 0 0 0 0 0 0 0 0: window
+            5 0 0 0 0 0 0 0 0 0 0 0: door
+            6 0 0 1 1 0 0 0 0 0 0 0: object
+            8 0 0 2 0 0 0 0 0 0 0 0: slab
+            9 0 0 1 2 0 0 0 0 0 0 0: roof
+        - "MSH"
+        - u32: (2, 3, 5, 6 observed) (number of packets?)
+        - FOR EACH PACKET:
+            - u32: 0
+            - u16: number of vertices
+            - u16[5]:
+            - u64: packet index?
+            - float[6]: bounding box?
+            - u8[12]: 0
+            - u16: N
+                sometimes is the number of repetitions of the next field
+                other times just zero
+            - FOR EACH VERTEX:
+                - float[8]:
+                    unknown - rotation matrix with strictly unit determinant?
+            - FOR EACH INDEX:
+                - u16: vertex index?
+            - MANY TIMES:
+                - u16: usually the sum of earlier X values
+                - u16: X (observed 6, 18, 21, 54...)
+                - float: unknown
+
+AT OFFSET 18578919:
+    - "MAT"
+    - u32: = number of materials
+    - FOR EACH MATERIAL (608 BYTES EACH):
+        - u32: material ID?
+        - char[512]: zero padded ascii material name
+        - float[4]: RGBA colour
+        - float[15]: unknown properties
+        - u128: material ID?
+
+AT OFFSET 18620270:
+    - "LAY"
+    - u32: number of layers
+    - FOR EACH LAYER (268 BYTES EACH):
+        - u64: incrementing index in file
+        - u16: layer index
+        - char[256]: zero padded ascii layer name
+        - u16: unknown
