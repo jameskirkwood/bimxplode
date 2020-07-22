@@ -77,7 +77,7 @@ This field always contains 40 hexadecimal digits. I refer to it as the "digest" 
 
 ## 📦 ZRES
 
-This is a flat archive format. Files in a ZRES archive are usually compressed (see [QLZ](#🗜-qlz)).
+This is a flat archive format. Files in a ZRES archive are usually compressed (see [QLZ](#-qlz)).
 
 ZRES format models were observed to contain TGA images, XML metadata and various binary files with recognisable names and contents. The binary files were also present in an embedded ZRES archive within a BXPK format model.
 
