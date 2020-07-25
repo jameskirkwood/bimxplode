@@ -21,7 +21,7 @@ class quicklz:
 setup(
 
   name='bimxplode',
-  version='0.1.0',
+  version='0.1.1',
   description='A tool for extracting ARCHICAD BIMx hyper-models',
 
   long_description=long_description,
@@ -59,7 +59,10 @@ setup(
   ext_modules=[quicklz.extension],
 
   python_requires='>=3.5, <4',
-  install_requires=[],
+  install_requires=[
+    'numpy',
+    'pygltflib',
+  ],
 
   entry_points={
     'console_scripts': [

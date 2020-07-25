@@ -70,7 +70,7 @@ def main(description, create=None, extract=None):
 
   args = ap.parse_args()
 
-  if not args.include:
+  if not args.include: # default does not work like this
     args.include = ['*']
 
   def iter_path(p):
@@ -78,8 +78,7 @@ def main(description, create=None, extract=None):
     if p.is_dir():
       if args.recursive:
         for p in p.iterdir():
-          for p in iter_path(p):
-            yield p
+          yield from iter_path(p)
       else:
         logging.warning(f'skipping directory: {p}')
     elif p.is_file():
@@ -106,7 +105,8 @@ def main(description, create=None, extract=None):
       return sys.stdin.buffer
     return Path(name).open('rb')
 
-  if create: create_files = list(iter_input_files(args.create))
+  if create:
+    create_files = list(iter_input_files(args.create))
 
   logging.basicConfig(level=args.log_level, format='%(levelname)s: %(message)s')
 

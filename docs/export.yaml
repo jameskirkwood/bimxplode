@@ -1,16 +1,22 @@
 AT OFFSET 850:
     - "TEX"
-    - u32: 34
+    - u32: number of textures
 
 AT OFFSET 12127929:
     - "ELM"
     - u32: unknown
     - u32: unknown
     - FOR EACH ELEMENT:
-        - u32: unknown
+        - u32: element numeric key in Offsets.bin
         - u8[16]: 0
-        - float[15]: unknown
-        - u8[12]: 0
+        - float[3][5]:
+            - minimum x,y,z coordinates
+            - maximum x,y,z coordinates
+            - middle x,y,z coordinates
+            - observed approx half lengths of x,y,z intervals
+            - observed approx half lengths of x,y,z intervals
+        - float[2]: unknown (usually < 10, almost always < 100)
+        - u32: unknown (up to 3 digit values observed)
         - char[128]: zero padded ascii "Element ID"
         - char[36]: ascii element "guid"
         - u8[12]: 0
@@ -32,22 +38,26 @@ AT OFFSET 12127929:
             8 0 0 2 0 0 0 0 0 0 0 0: slab
             9 0 0 1 2 0 0 0 0 0 0 0: roof
         - "MSH"
-        - u32: (2, 3, 5, 6 observed) (number of packets?)
+        - u32: unknown (single digit values observed) number of packets?
         - FOR EACH PACKET:
             - u32: 0
             - u16: number of vertices
-            - u16[5]:
+            - u16: number of indices in triangle index array
+            - u16: number of indices in wireframe index array
+            - u16[2]: unknown
             - u64: packet index?
-            - float[6]: bounding box?
-            - u8[12]: 0
+            - float[9]: unknown (last 1 or 3 often zero)
             - u16: N
                 sometimes is the number of repetitions of the next field
                 other times just zero
             - FOR EACH VERTEX:
-                - float[8]:
-                    unknown - rotation matrix with strictly unit determinant?
-            - FOR EACH INDEX:
-                - u16: vertex index?
+                - float[2]: texture coordinates
+                - float[3]: vertex normal
+                - float[3]: vertex position
+            - FOR EACH TRIANGLE:
+                - u16[3]: vertex indices
+            - FOR EACH WIREFRAME EDGE:
+                - u16[2]: vertex indices
             - MANY TIMES:
                 - u16: usually the sum of earlier X values
                 - u16: X (observed 6, 18, 21, 54...)
