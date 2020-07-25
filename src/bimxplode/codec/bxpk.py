@@ -1,6 +1,5 @@
 from .util import cut, unpack
 import hashlib
-import logging
 import struct
 
 class Member:
@@ -9,16 +8,16 @@ class Member:
 
     if inode:
 
-      name_len, p = unpack('<I', inode)
-      name, p = cut(p, name_len)
-      u64_0, size, offset, digest, p = unpack('<3Q40s', p)
+      name_len, _ = unpack('<I', inode)
+      name, _ = cut(_, name_len)
+      u64_0, size, offset, digest, _ = unpack('<3Q40s', _)
 
       self.unknown_u64_0 = u64_0
       self.name = name.tobytes().decode()
       self.digest = digest.decode()
-      self.inode_end = p
       self.offset = offset
       self.data = buffer[offset:][:size]
+      self.end = _
 
     elif name:
 
@@ -49,7 +48,7 @@ class Member:
 
     return inode
 
-def extract(buffer):
+def extract(cli, buffer):
   """Yield all members in a BXPK archive as Member objects."""
 
   buffer = memoryview(buffer)
@@ -62,13 +61,15 @@ def extract(buffer):
     raise ValueError('No BXPK header present.')
 
   if u32_8 != 1:
-    logging.warning(f'abnormal third header field: 0x{u32_8:08x} / {u32_8}')
+    cli.warn(f'abnormal third header field: 0x{u32_8:08x} / {u32_8}')
 
   try:
-    inode = payload[-index_size:]
+    _ = payload[-index_size:]
     for i in range(file_count):
-      yield (member := Member(payload, inode))
-      inode = member.inode_end
+      member = Member(payload, inode=_)
+      _ = member.end
+      cli.list(f'{member.offset:10} {len(member.data):10} {member.name}')
+      yield member
   except:
     raise ValueError('Index corrupted.')
 
@@ -85,10 +86,5 @@ def archive(members, writer):
   for inode in inodes:
     writer.write(inode)
   
-  header = struct.pack('<3I4s',
-    len(members),
-    sum(len(i) for i in inodes),
-    1,
-    b'KPXB')
-
+  header = struct.pack('<3I4s', len(members), sum(len(i) for i in inodes), 1, b'KPXB')
   writer.write(header)

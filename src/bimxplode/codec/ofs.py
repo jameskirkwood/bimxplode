@@ -1,7 +1,6 @@
 from .util import cut, unpack
-import logging
 
-def extract(buffer):
+def extract(cli, buffer):
 
   buffer = memoryview(buffer)
 
@@ -18,7 +17,6 @@ def extract(buffer):
     if not name[0]: break
     name = name[::-1]
     assert sp == 32
-    logging.info(f'offsets for {repr(name)} begin at {chunk_offset}')
 
     q = buffer[chunk_offset:]
     name2, sbo, count, q = unpack('<3sbI', q)
